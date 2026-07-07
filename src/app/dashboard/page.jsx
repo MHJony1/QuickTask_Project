@@ -2,7 +2,7 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { authClient } from '@/lib/auth-client';
-import { taskApi, paymentApi } from '@/utils/api';
+import { taskApi, paymentApi, userApi } from '@/utils/api';
 import toast from 'react-hot-toast';
 import {
   Crown,
@@ -36,8 +36,12 @@ const DashboardContent = () => {
   }, []);
 
   useEffect(() => {
-    if (sessionId && user && !user.isPremium) {
-      verifyPayment(sessionId);
+    if (sessionId && user) {
+      if (!user.isPremium) {
+        verifyPayment(sessionId);
+      } else {
+        router.replace('/dashboard');
+      }
     }
   }, [sessionId, user]);
 
@@ -66,19 +70,27 @@ const DashboardContent = () => {
       const { data } = await authClient.getSession();
 
       if (data?.user) {
-        // ✅ DATABASE ONLY - ignore localStorage completely
-        const isPremium = data.user.isPremium === true;
+        let freshUser = null;
+        try {
+          freshUser = await userApi.getUser();
+        } catch (e) {
+          console.error('Failed to get fresh user data', e);
+        }
+
+        // Use fresh database state for isPremium if available
+        const isPremium = freshUser ? freshUser.isPremium === true : data.user.isPremium === true;
 
         // ✅ Clean up localStorage if database says false
         if (!isPremium) {
           localStorage.removeItem('isPremiumUser');
         }
 
-        console.log('User from DB:', data.user);
+        console.log('User from DB:', freshUser || data.user);
         console.log('Is Premium from DB:', isPremium);
 
         setUser({
           ...data.user,
+          ...freshUser,
           isPremium: isPremium,
         });
 
