@@ -5,7 +5,7 @@ import { Mail, Lock, User, Loader2, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
-import { authClient } from '@/lib/auth-client'; // আপনার Better Auth ক্লায়েন্ট পাথ
+import { authClient } from '@/lib/auth-client'; 
 
 const RegisterPage = () => {
   const router = useRouter();
@@ -31,14 +31,14 @@ const RegisterPage = () => {
         email: formData.email.trim().toLowerCase(),
         password: formData.password,
         name: formData.name.trim(),
-        callbackURL: '/login',
+        callbackURL: '/dashboard',
       });
 
       if (error) {
         toast.error(error.message || 'Registration failed!');
       } else if (data) {
         toast.success('Account created successfully!');
-        router.push('/login');
+        router.push('/dashboard');
         router.refresh();
       }
     } catch (err) {

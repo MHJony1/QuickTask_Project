@@ -32,7 +32,7 @@ const LoginPage = () => {
         toast.error(error.message || 'Invalid email or password!');
       } else {
         toast.success('Login successful!');
-        router.push('/');
+        router.push('/dashboard');
         router.refresh();
       }
     } catch (err) {
