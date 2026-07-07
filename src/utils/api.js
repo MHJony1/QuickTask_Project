@@ -1,6 +1,6 @@
 import { authClient } from "@/lib/auth-client";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 class ApiClient {
   constructor() {
@@ -67,10 +67,15 @@ export const api = new ApiClient();
 export const taskApi = {
   getAll: () => api.get("/tasks"),
   create: (data) => api.post("/tasks", data),
-  update: (id, data) => api.patch(`/tasks/${id}`, data), // <-- PATCH now
+  update: (id, data) => api.patch(`/tasks/${id}`, data), 
   delete: (id) => api.delete(`/tasks/${id}`),
 };
 
 export const paymentApi = {
   createCheckoutSession: () => api.post("/create-checkout-session"),
+  verifyPayment: (sessionId) => api.post("/verify-payment", { sessionId }),
+};
+
+export const userApi = {
+  getUser: () => api.get("/users/me"),
 };
