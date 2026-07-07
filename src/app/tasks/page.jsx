@@ -68,8 +68,6 @@ const TasksPage = () => {
   };
 
   const handleDeleteTask = async (taskId) => {
-    if (!confirm("Delete this task?")) return;
-
     try {
       await taskApi.delete(taskId);
       setTasks((prev) => prev.filter((task) => task._id !== taskId));
