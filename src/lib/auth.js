@@ -22,7 +22,7 @@ export const auth = betterAuth({
       isPremium: {
         type: 'boolean',
         defaultValue: false,
-        input: false, // users can't set this themselves at signup
+        input: false, 
       },
     },
   },
